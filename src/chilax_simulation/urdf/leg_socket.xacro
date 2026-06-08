@@ -1,0 +1,81 @@
+<?xml version="3.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="socket_inner_length" value="0.06" />
+    <xacro:property name="socket_inner_width" value="0.025" />
+    <xacro:property name="socket_inner_height" value="0.04" />
+
+    <!-- x_axis = 1 means front, -1 means back and y_axis = 1 means left, -1 means right -->
+    <xacro:macro name="create_socket" params="prefix o_y x_axis y_axis">
+        <link name="${prefix}_socket_start">
+            <visual>
+                <geometry>
+                    <box size="${socket_inner_length} ${socket_inner_width} ${socket_inner_height}" />
+                </geometry>
+                <origin xyz="0 ${o_y} 0" rpy="0 0 0" />
+                <material name="socket" />
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${socket_inner_length} ${socket_inner_width} ${socket_inner_height}" />
+                </geometry>
+                <origin xyz="0 ${o_y} 0" rpy="0 0 0" />
+            </collision>
+            <!-- inertial -->
+            <xacro:box_inertia m="0.0425" x="${socket_inner_length}" y="${socket_inner_width}" z="${socket_inner_height}" o_xyz="0 ${o_y} 0" o_rpy="0 0 0" />
+            <!-- <xacro:box_inertia m="0.01" x="${socket_inner_length}" y="${socket_inner_width}" z="${socket_inner_height}" o_xyz="0 ${o_y} 0" o_rpy="0 0 0" /> -->
+        </link>
+
+        <link name="${prefix}_socket_end">
+            <visual>
+                <geometry>
+                    <cylinder radius="${socket_inner_height / 2.0}" length="${socket_inner_length}" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 ${pi / 2.0} 0" />
+                <material name="socket" />
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="${socket_inner_height / 2.0}" length="${socket_inner_length}" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 ${pi / 2.0} 0" />
+            </collision>
+            <!-- inertial -->
+            <xacro:cylinder_inertia m="0.0425" r="${socket_inner_height / 2.0}" l="${socket_inner_length}" o_xyz="0 0 0" o_rpy="0 ${pi / 2.0} 0" />
+            <!-- <xacro:cylinder_inertia m="0.01" r="${socket_inner_height / 2.0}" l="${socket_inner_length}" o_xyz="0 0 0" o_rpy="0 ${pi / 2.0} 0" /> -->
+        </link>
+
+        <joint name="body_${prefix}_socket_joint" type="revolute">
+            <parent link="middle_body_link" />
+            <child link="${prefix}_socket_start" />
+            <origin xyz="${x_axis * (middle_body_length + socket_length) / 2.0} ${y_axis * socket_width} 0" rpy="0 0 0" />
+            <!-- <limit lower="0" upper="${pi}" effort="2.0" velocity="15.0" /> -->
+            <limit lower="0" upper="${pi}" effort="3.0" velocity="15.0" />
+            <axis xyz="1 0 0" />
+            <dynamics damping="0.12" friction="0.05"/>
+        </joint>
+
+        <joint name="${prefix}_socket_joint" type="fixed">
+            <parent link="${prefix}_socket_start" />
+            <child link="${prefix}_socket_end" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </joint>
+
+        <joint name="${prefix}_leg_socket_joint" type="revolute">
+            <parent link="${prefix}_socket_start" />
+            <child link="${prefix}_upper_leg_link" />
+            <origin xyz="${socket_inner_length / 3.0} ${y_axis * (0.005 + socket_inner_width + leg_width / 2.0)} 0" rpy="0 0 0" />
+            <axis xyz="0 -1 0" />
+            <!-- <limit lower="0" upper="${pi}" effort="2.0" velocity="15.0" /> -->
+            <limit lower="0" upper="${pi}" effort="3.0" velocity="15.0" />
+            <dynamics damping="0.12" friction="0.05"/>
+        </joint>
+
+    </xacro:macro>
+
+    <xacro:create_socket prefix="front_left" o_y="${socket_inner_width / 2.0}" x_axis="1" y_axis="1" />
+    <xacro:create_socket prefix="front_right" o_y="${-socket_inner_width / 2.0}" x_axis="1" y_axis="-1" />
+    <xacro:create_socket prefix="back_left" o_y="${socket_inner_width / 2.0}" x_axis="-1" y_axis="1" />
+    <xacro:create_socket prefix="back_right" o_y="${-socket_inner_width / 2.0}" x_axis="-1" y_axis="-1" />
+
+</robot>

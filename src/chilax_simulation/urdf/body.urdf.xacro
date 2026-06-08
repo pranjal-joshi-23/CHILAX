@@ -1,0 +1,150 @@
+<?xml version="3.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="front_body_length" value="0.05" />
+    <xacro:property name="middle_body_length" value="0.21" />
+    <xacro:property name="end_body_length" value="0.05" />
+
+    <xacro:property name="socket_width" value="0.05" />
+    <xacro:property name="socket_length" value="0.07" />
+
+    <xacro:property name="body_width" value="0.2" />
+    <xacro:property name="body_height" value="0.06" />
+
+    <link name="base_link" />
+
+    <link name="front_body_link">
+        <visual>
+            <geometry>
+                <box size="${front_body_length} ${body_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="leg" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${front_body_length} ${body_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- inertial -->
+        <!-- <xacro:box_inertia m="0.061" x="${front_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" /> -->
+        <xacro:box_inertia m="0.171" x="${front_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" />
+        <!-- <xacro:box_inertia m="0.01" x="${front_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" /> -->
+    </link>
+
+    <link name="front_socket_link">
+        <visual>
+            <geometry>
+                <box size="${socket_length} ${socket_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="body" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${socket_length} ${socket_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- inertial -->
+        <xacro:box_inertia m="0.033" x="${socket_length}" y="${socket_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" />
+    </link>
+
+    <link name="middle_body_link">
+        <visual>
+            <geometry>
+                <box size="${middle_body_length} ${body_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="body" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${middle_body_length} ${body_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- inertial -->
+        <!-- <xacro:box_inertia m="0.572" x="${middle_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" /> -->
+        <xacro:box_inertia m="0.352" x="${middle_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" />
+        <!-- <xacro:box_inertia m="0.01" x="${middle_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" /> -->
+    </link>
+
+    <link name="end_socket_link">
+        <visual>
+            <geometry>
+                <box size="${socket_length} ${socket_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="body" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${socket_length} ${socket_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- inertial -->
+        <xacro:box_inertia m="0.033" x="${socket_length}" y="${socket_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" />
+    </link>
+
+    <link name="end_body_link">
+        <visual>
+            <geometry>
+                <box size="${end_body_length} ${body_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="body" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${end_body_length} ${body_width} ${body_height}" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- inertial -->
+        <!-- <xacro:box_inertia m="0.061" x="${end_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" /> -->
+        <xacro:box_inertia m="0.171" x="${end_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" />
+        <!-- <xacro:box_inertia m="0.01" x="${end_body_length}" y="${body_width}" z="${body_height}" o_xyz="0 0 0" o_rpy="0 0 0" /> -->
+    </link>
+
+    <link name="base_footprint" />
+
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="base_footprint" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_body_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="middle_body_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="front_middle_body_joint" type="fixed">
+        <parent link="middle_body_link" />
+        <child link="front_body_link" />
+        <origin xyz="${(middle_body_length + front_body_length) / 2.0 + socket_length} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="front_socket_middle_joint" type="fixed">
+        <parent link="middle_body_link" />
+        <child link="front_socket_link" />
+        <origin xyz="${(middle_body_length + socket_length) / 2.0} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="end_socket_middle_joint" type="fixed">
+        <parent link="middle_body_link" />
+        <child link="end_socket_link" />
+        <origin xyz="${-(middle_body_length + socket_length) / 2.0} 0 0" rpy="0 0 0" />
+    </joint>
+
+    <joint name="end_middle_body_joint" type="fixed">
+        <parent link="middle_body_link" />
+        <child link="end_body_link" />
+        <origin xyz="${-((middle_body_length + end_body_length) / 2.0 + socket_length)} 0 0" rpy="0 0 0" />
+    </joint>
+
+</robot>

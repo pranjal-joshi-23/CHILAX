@@ -1,0 +1,10 @@
+[
+    {
+        "name": "pranjal",
+        "embeddings": [
+            "pranjal_front_profile.npy",
+            "pranjal_left_profile.npy",
+            "pranjal_right_profile.npy"
+        ]
+    }
+]

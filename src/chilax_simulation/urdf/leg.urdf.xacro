@@ -1,0 +1,97 @@
+<?xml version="3.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="thigh_length" value="0.12" />
+    <xacro:property name="lower_leg_length" value="0.11" />
+    <xacro:property name="leg_width" value="0.04" />
+    <xacro:property name="leg_height" value="0.04" />
+
+    <!-- x_axis = 1 means front, -1 means back and y_axis = 1 means left, -1 means right -->
+    <xacro:macro name="create_leg" params="prefix">
+
+        <!-- UPPER LEG -->
+        <link name="${prefix}_upper_leg_link">
+            <visual>
+                <geometry>
+                    <box size="${thigh_length} ${leg_width} ${leg_height}" />
+                </geometry>
+                <origin xyz="${-thigh_length / 2.0} 0 0" rpy="0 0 0" />
+                <material name="leg" />
+            </visual>
+
+            <collision>
+                <geometry>
+                    <box size="${thigh_length} ${leg_width} ${leg_height}" />
+                </geometry>
+                <origin xyz="${-thigh_length / 2.0} 0 0" rpy="0 0 0" />
+            </collision>
+
+            <xacro:box_inertia m=".083" x="${thigh_length}" y="${leg_width}" z="${leg_height}" o_xyz="${-thigh_length / 2.0} 0 0" o_rpy="0 0 0" />
+            <!-- <xacro:box_inertia m=".01" x="${thigh_length}" y="${leg_width}" z="${leg_height}" o_xyz="${-thigh_length / 2.0} 0 0" o_rpy="0 0 0" /> -->
+        </link>
+
+        <!-- LOWER LEG -->
+        <link name="${prefix}_lower_leg_link">
+            <visual>
+                <geometry>
+                    <box size="${lower_leg_length} ${leg_width} ${leg_height}" />
+                </geometry>
+                <origin xyz="${-lower_leg_length / 2.0} 0 0" rpy="0 0 0" />
+                <material name="leg" />
+            </visual>
+
+            <collision>
+                <geometry>
+                    <box size="${lower_leg_length} ${leg_width} ${leg_height}" />
+                </geometry>
+                <origin xyz="${-lower_leg_length / 2.0} 0 0" rpy="0 0 0" />
+            </collision>
+
+            <xacro:box_inertia m="0.02" x="${lower_leg_length}" y="${leg_width}" z="${leg_height}" o_xyz="${-lower_leg_length / 2.0} 0 0" o_rpy="0 0 0" />
+            <!-- <xacro:box_inertia m="0.01" x="${lower_leg_length}" y="${leg_width}" z="${leg_height}" o_xyz="${-lower_leg_length / 2.0} 0 0" o_rpy="0 0 0" /> -->
+        </link>
+
+        <!-- FOOT -->
+        <link name="${prefix}_feet_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="${leg_width / 2.0}" length="${leg_width}" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
+                <material name="leg" />
+            </visual>
+
+            <collision>
+                <geometry>
+                    <cylinder radius="${leg_width / 2.0}" length="${leg_width}" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
+            </collision>
+
+            <xacro:cylinder_inertia m="0.006" r="${leg_width / 2.0}" l="${leg_width}" o_xyz="0 0 0" o_rpy="${pi / 2.0} 0 0" />
+        </link>
+
+        <joint name="${prefix}_leg_joint" type="revolute">
+            <parent link="${prefix}_upper_leg_link" />
+            <child link="${prefix}_lower_leg_link" />
+            <origin xyz="${-thigh_length} 0 0" rpy="0 0 0" />
+            <axis xyz="0 -1 0" />
+            <!-- <limit lower="0" upper="${pi}" effort="2.0" velocity="15.0" /> -->
+            <limit lower="0" upper="${pi}" effort="3.0" velocity="15.0" />
+            <dynamics damping="0.12" friction="0.05"/>
+        </joint>
+
+        <joint name="${prefix}_lower_leg_feet_joint" type="fixed">
+            <parent link="${prefix}_lower_leg_link" />
+            <child link="${prefix}_feet_link" />
+            <origin xyz="${-lower_leg_length} 0 0" rpy="0 0 0" />
+        </joint>
+
+    </xacro:macro>
+
+    <xacro:create_leg prefix="front_left" />
+    <xacro:create_leg prefix="front_right" />
+    <xacro:create_leg prefix="back_left" />
+    <xacro:create_leg prefix="back_right" />
+
+</robot>
