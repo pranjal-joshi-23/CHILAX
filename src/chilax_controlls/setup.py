@@ -25,7 +25,10 @@ setup(
     entry_points={
         'console_scripts': [
             "joint_position_publisher = chilax_controlls.joint_position_publisher:main",
-            "main = chilax_controlls.main:main"
+            # "main = chilax_controlls.main:main"
+            "test_controller = chilax_controlls.test_controller:main",
+            "user_keyboard_input = chilax_controlls.user_keyboard_input:main",
+            "keyboard_controller = chilax_controlls.keyboard_controlles_mapping:main"
         ],
     },
 )
