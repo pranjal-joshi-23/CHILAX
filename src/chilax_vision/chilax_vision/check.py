@@ -15,6 +15,16 @@ with open("faces_database/faces.json", 'r') as file:
 for info in faces_database:
     print(info)
 
+known_users = []
+
+for user in faces_database:
+    embeddings = [np.load(f"faces_database/{profile}") for profile in user['embeddings']]
+
+    known_users.append({
+        "name": user['name'],
+        "embeddings": embeddings
+    })
+
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
@@ -25,9 +35,11 @@ COLORS = [
 ]
 random_color = random.randint(0, 4)
 
-last_known_face = []
+last_known_face = None
 current_frame = 5
 frame_interval = 5
+
+user_label = "Unknown User!"
 
 def cosine_similarity(a, b):
     return np.dot(a, b) / (norm(a) * norm(b))
@@ -44,12 +56,35 @@ while True:
         faces = app.get(frame)
         if len(faces) > 0:
             last_known_face = max(faces, key=lambda f: ((f.bbox[2] - f.bbox[0]) * (f.bbox[3] - f.bbox[1])))
+            embedding = last_known_face.embedding
+
+            best_score = 0
+            best_score_user = "Unknown User!"
+
+            for user in known_users:
+                front_profile_embedding = user['embeddings'][0]
+                right_profile_embedding = user['embeddings'][1]
+                left_profile_embedding = user['embeddings'][2]
+                front_embedding_score = cosine_similarity(front_profile_embedding, embedding)
+                right_embedding_score = cosine_similarity(right_profile_embedding, embedding)
+                left_embedding_score = cosine_similarity(left_profile_embedding, embedding)
+
+                score = max(front_embedding_score, right_embedding_score, left_embedding_score)
+
+                if score >= best_score:
+                    best_score = score
+                    best_score_user = user["name"].capitalize()
+            
+            if best_score >= 0.55:
+                user_label = best_score_user
+            else:
+                user_label = "Unknown User!"
         else:
-            last_known_face = []
+            last_known_face = None
+            user_label = "Unknown User!"
         current_frame = 0
 
-    if len(last_known_face)>0:
-        embedding = last_known_face.embedding
+    if last_known_face is not None:
         bbox = last_known_face.bbox.astype(int)
         x1, y1, x2, y2 = bbox
         
@@ -60,21 +95,8 @@ while True:
         color = COLORS[random_color]
         
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-        
-        label = "Unkown User!"
 
-        for user in faces_database:
-            front_profile_embedding = np.load(f"faces_database/{user['embeddings'][0]}")
-            right_profile_embedding = np.load(f"faces_database/{user['embeddings'][1]}")
-            left_profile_embedding = np.load(f"faces_database/{user['embeddings'][2]}")
-            front_embedding_score = cosine_similarity(front_profile_embedding, embedding)
-            right_embedding_score = cosine_similarity(right_profile_embedding, embedding)
-            left_embedding_score = cosine_similarity(left_profile_embedding, embedding)
-
-            if front_embedding_score >= 0.55 or right_embedding_score >= 0.55 or left_embedding_score >= 0.55:
-                label = user["name"].capitalize()
-        
-        cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        cv2.putText(frame, user_label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
     cv2.imshow("SCRFD Output", frame)
     
