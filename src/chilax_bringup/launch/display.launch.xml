@@ -27,7 +27,6 @@
     <node pkg="chilax_controlls" exec="test_controller">
         <param from="$(var chilax_config_path)" />
     </node>
-    <node pkg="chilax_controlls" exec="user_keyboard_input" />
     <node pkg="chilax_controlls" exec="keyboard_controller" />
 
     <node pkg="chilax_vision" exec="vision" />
