@@ -137,6 +137,8 @@ cv2.destroyAllWindows()
 
 os.makedirs("faces_database", exist_ok=True)
 
+# need to increase imbeddings for each face to make the system better!
+
 if front_profile_embedding is not None and left_profile_embedding is not None and right_profile_embedding is not None:
     np.save(f"faces_database/{user_name}_front_profile.npy", front_profile_embedding)
     np.save(f"faces_database/{user_name}_left_profile.npy", left_profile_embedding)
