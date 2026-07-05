@@ -1,10 +1,10 @@
 <?xml version="3.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:property name="thigh_length" value="0.12" />
-    <xacro:property name="lower_leg_length" value="0.11" />
-    <xacro:property name="leg_width" value="0.04" />
-    <xacro:property name="leg_height" value="0.04" />
+    <xacro:property name="thigh_length" value="0.08" />
+    <xacro:property name="lower_leg_length" value="0.075" />
+    <xacro:property name="leg_width" value="0.03" />
+    <xacro:property name="leg_height" value="0.03" />
 
     <!-- x_axis = 1 means front, -1 means back and y_axis = 1 means left, -1 means right -->
     <xacro:macro name="create_leg" params="prefix">

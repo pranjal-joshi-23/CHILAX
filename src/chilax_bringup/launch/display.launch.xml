@@ -2,7 +2,8 @@
     <let name="urdf_path" value="$(find-pkg-share chilax_simulation)/urdf/main.urdf.xacro" />
     <let name="rviz_config_path" value="$(find-pkg-share chilax_bringup)/rviz/chilax.rviz" />
     <let name="gazebo_config_path" value="$(find-pkg-share chilax_bringup)/config/gazebo_bridge.yaml" />
-    <let name="world_path" value="$(find-pkg-share chilax_bringup)/world/testing.sdf" />
+    <!-- <let name="world_path" value="$(find-pkg-share chilax_bringup)/world/testing.sdf" /> -->
+    <let name="world_path" value="$(find-pkg-share chilax_bringup)/world/Warehouse/model.sdf" />
     <let name="chilax_config_path" value="$(find-pkg-share chilax_bringup)/config/parameters.yaml" />
 
     <node pkg="robot_state_publisher" exec="robot_state_publisher">
@@ -14,7 +15,7 @@
         <!-- <arg name="gz_args" value="empty.sdf -r" /> -->
     </include>
 
-    <node pkg="ros_gz_sim" exec="create" args="-topic robot_description -z 0.5" />
+    <node pkg="ros_gz_sim" exec="create" args="-topic robot_description -z 1.5" />
 
     <node pkg="ros_gz_bridge" exec="parameter_bridge">
         <param name="config_file" value="$(var gazebo_config_path)" />
@@ -29,7 +30,7 @@
     </node>
     <node pkg="chilax_controlls" exec="keyboard_controller" />
 
-    <node pkg="chilax_vision" exec="vision" />
+    <!-- <node pkg="chilax_vision" exec="vision" /> -->
 
     <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_config_path)" />
 </launch>

@@ -1,14 +1,14 @@
 <?xml version="3.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:property name="front_body_length" value="0.05" />
-    <xacro:property name="middle_body_length" value="0.21" />
-    <xacro:property name="end_body_length" value="0.05" />
+    <xacro:property name="front_body_length" value="0.03" />
+    <xacro:property name="middle_body_length" value="0.1" />
+    <xacro:property name="end_body_length" value="0.03" />
 
     <xacro:property name="socket_width" value="0.05" />
     <xacro:property name="socket_length" value="0.07" />
 
-    <xacro:property name="body_width" value="0.2" />
+    <xacro:property name="body_width" value="0.15" />
     <xacro:property name="body_height" value="0.06" />
 
     <link name="base_link" />

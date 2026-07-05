@@ -60,6 +60,9 @@ class MyNode(Node):
         # keeps track of steps of single movement(1 single movement consists of 2 steps)
         self.step = 1
         
+        # checks if its currently performing any task
+        self.doing_anything = False
+
         # a subscriber that listens to the topic with linear and angular velocity and adjusts the walking speed as per 
         self.get_velocity = self.create_subscription(Twist, "velocity_control", self.callback_velocity_changed, 10)
         
@@ -174,6 +177,8 @@ class MyNode(Node):
                 self.is_standing = True
 
         elif self.linear_velocity != 0.0:
+
+            self.doing_anything = True
             
             if self.linear_velocity > 0:
             
@@ -236,6 +241,8 @@ class MyNode(Node):
                         self.step += 1
                         
         elif self.angular_velocity != 0.0:
+
+            self.doing_anything = True
             
             if self.angular_velocity > 0:
             
@@ -301,10 +308,12 @@ class MyNode(Node):
 
         if finished_cycle:
             self.t = 0.0
+            self.doing_anything = False
             
     def callback_velocity_changed(self, data: Twist):
-        self.linear_velocity = data.linear.x
-        self.angular_velocity = data.angular.z
+        if not self.doing_anything:
+            self.linear_velocity = data.linear.x
+            self.angular_velocity = data.angular.z
     
     def call_publish_positions(self, positions):
         msg = Positions()
