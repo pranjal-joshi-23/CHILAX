@@ -1,4 +1,4 @@
-# 🐕🤖 CHILAX
+# CHILAX
 
 ### ROS 2 Quadruped Robot Simulator
 
@@ -26,30 +26,30 @@ The long-term vision is to transform CHILAX into an intelligent robotic companio
 
 ---
 
-# 🎥 Demo
+# Demo
 
 | Demo                      | Description                                   |
 | ------------------------- | --------------------------------------------- |
-| 🎬 Robot Simulation       | Robot walking inside Gazebo                   |
-| 🎬 Keyboard Teleoperation | Manual robot control                          |
+| Robot Simulation       | Robot walking inside Gazebo                   |
+| Keyboard Teleoperation | Manual robot control                          |
 
 ![Walking Demo](gifs/movementgz.gif)
 
 | Demo                      | Description                                   |
 | ------------------------- | --------------------------------------------- |
-| 🎬 RViz Visualization     | Robot Model and sensor visualization |
+| RViz Visualization     | Robot Model and sensor visualization |
 
 ![Walking Demo](gifs/movementrviz.gif)
 
 | Demo                      | Description                                   |
 | ------------------------- | --------------------------------------------- |
-| 🎬 Face Recognition       | AI identifies registered users                |\
+| Face Recognition       | AI identifies registered users                |\
 
 ![Face Recognition](images/fr.png)
 
 | Demo                      | Description                                   |
 | ------------------------- | --------------------------------------------- |
-| 🎬 ROS Graph              | Communication between ROS nodes               |
+| ROS Graph              | Communication between ROS nodes               |
 
 ![RQT](images/rqt.png)
 
@@ -109,9 +109,7 @@ Future perception modules can be added without modifying existing robot control 
 
 # System Architecture
 
-```
 ![System Architecture](images/sa.png)
-```
 
 ---
 
