@@ -109,6 +109,7 @@ Future perception modules can be added without modifying existing robot control 
 
 # System Architecture
 
+> **This is the target architecture, not the current architecture.**
 ![System Architecture](images/sa.png)
 
 ---
